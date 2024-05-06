@@ -71,8 +71,11 @@ def SemanticSearch(question):
     stemmer_sentence = PorterInput(question)
     result = list((MatchSemantic(stemmer_sentence, sex), ' '))[0][:-1]
     AnswerIndex = max(enumerate(result), key=lambda x: x[1])[0]
-    Answer = sex[list(sex)[AnswerIndex]]
-    return Answer
+    if max(result) > 0.01:
+        Answer = sex[list(sex)[AnswerIndex]]
+        return Answer
+    else:
+        return "К сожалению мы не можем на это ответить."
 
 
 
