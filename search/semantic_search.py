@@ -11,13 +11,14 @@ import string
 import pandas as pd
 import sqlite3
 import json
+from difflib import SequenceMatcher
 np.seterr(all= 'ignore')
 ru_stemmer = RussianStemmer()
 
-
-
+def similar(a, b):
+    return SequenceMatcher(None, a, b).ratio()
 def MatchSemantic(query_string, documents):
-    stopwords = ['the', 'and', 'are', 'a']
+    stopwords = ['the', 'and', 'are', 'a', 'как', 'кто', 'зачем', 'и', 'а']
     if len(documents) == 1: documents.append('')
 
     def preprocess(doc):
@@ -49,13 +50,13 @@ def MatchSemantic(query_string, documents):
 sex = {}
 
 def UpdateDataBase():
-    cnx = sqlite3.connect('database\\questions.db')
-    documents = pd.read_sql_query("SELECT questions, answer FROM base", cnx)
-    for i in range(len(documents["questions"])):
-        words = documents["questions"][i].split()
+    cnx = sqlite3.connect('database\\wikipedia_articles.db')
+    documents = pd.read_sql_query("SELECT title, content FROM articles", cnx)
+    for i in range(len(documents["title"])):
+        words = documents["title"][i].lower().split()
         stemmer_sentence = [ru_stemmer.stem(word) for word in words]
         stemmer_sentence = str(stemmer_sentence).translate(str.maketrans('', '', string.punctuation))
-        sex[stemmer_sentence] = documents["answer"][i]
+        sex[stemmer_sentence] = documents["content"][i]
     with open('database\\UpdatedDataBase.json', 'w') as f:
         json.dump(sex, f)
 
@@ -63,20 +64,31 @@ def PorterInput(query_string):
     words = query_string.split()
     stemmer_sentence = [ru_stemmer.stem(word) for word in words]
     stemmer_sentence = str(stemmer_sentence).translate(str.maketrans('', '', string.punctuation))
+    print(stemmer_sentence)
     return stemmer_sentence
 
 def SemanticSearch(question):
     with open('database\\UpdatedDataBase.json', 'r') as f:
         sex = json.load(f)
+    question = question.lower()
     stemmer_sentence = PorterInput(question)
+    print(sex.keys())
+
     result = list((MatchSemantic(stemmer_sentence, sex), ' '))[0][:-1]
     AnswerIndex = max(enumerate(result), key=lambda x: x[1])[0]
+    print(sorted(result))
 
     if max(result) > 0.18:
         Answer = sex[list(sex)[AnswerIndex]]
         return Answer
     else:
-        return "К сожалению мы не можем на это ответить."
+        kef = 0
+        Results = []
+        for question in sex:
+            Results.append(similar(stemmer_sentence, question))
+        AnswerIndex = max(enumerate(Results), key=lambda x: x[1])[0]
+        return sex[list(sex)[AnswerIndex]]
+
 
 
 
