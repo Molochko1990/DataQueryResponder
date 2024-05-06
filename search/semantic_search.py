@@ -71,7 +71,8 @@ def SemanticSearch(question):
     stemmer_sentence = PorterInput(question)
     result = list((MatchSemantic(stemmer_sentence, sex), ' '))[0][:-1]
     AnswerIndex = max(enumerate(result), key=lambda x: x[1])[0]
-    if max(result) > 0.01:
+
+    if max(result) > 0.18:
         Answer = sex[list(sex)[AnswerIndex]]
         return Answer
     else:
