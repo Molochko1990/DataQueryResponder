@@ -1,11 +1,12 @@
 from re import sub
 import numpy as np
+from nltk.stem.snowball import RussianStemmer
 import gensim.downloader as api
 from gensim.corpora import Dictionary
 from gensim.models import TfidfModel
 from gensim.similarities import SparseTermSimilarityMatrix, WordEmbeddingSimilarityIndex, SoftCosineSimilarity
 from gensim.utils import simple_preprocess
-from nltk.stem.snowball import RussianStemmer
+
 from nltk.corpus import stopwords
 import string
 import pandas as pd
@@ -18,7 +19,7 @@ ru_stemmer = RussianStemmer()
 def similar(a, b):
     return SequenceMatcher(None, a, b).ratio()
 def MatchSemantic(query_string, documents):
-    stopwords = ['the', 'and', 'are', 'a', 'как', 'кто', 'зачем', 'и', 'а']
+    stopwords = ['the', 'and', 'are', 'a', 'как', 'кто', 'зачем', 'и', 'а', 'такой', 'такая', 'такие','почему']
     if len(documents) == 1: documents.append('')
 
     def preprocess(doc):

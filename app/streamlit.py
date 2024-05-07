@@ -1,6 +1,5 @@
-from search import semantic_search as ss
-
-import streamlit as st
+"""from search import semantic_search as ss
+from app import streamlit as st
 
 st.title('Умный ассистент')
 query = st.text_input('Введите ваш запрос:')
@@ -9,4 +8,4 @@ def process_query(query):
     st.write(ss.SemanticSearch(query))
 
 if st.button('Отправить запрос'):
-    process_query(query)
+    process_query(query)"""
