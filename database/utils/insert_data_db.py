@@ -1,5 +1,6 @@
 import sqlite3
 
+
 def insert_data():
     conn = sqlite3.connect('../knowledge_base.db')
     cursor = conn.cursor()

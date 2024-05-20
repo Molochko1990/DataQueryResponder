@@ -1,6 +1,7 @@
 import os
 import sqlite3
 
+
 def create_database():
     parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
     db_path = os.path.join(parent_dir, 'knowledge_base.db')
