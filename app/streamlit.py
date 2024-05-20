@@ -1,4 +1,8 @@
-from search import semantic_search as ss
+from ..search import semantic_search as ss
+
+
+
+input()
 
 import streamlit as st
 
