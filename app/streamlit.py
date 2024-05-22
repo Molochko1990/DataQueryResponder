@@ -1,15 +1,24 @@
 import streamlit as st
-from PIL import Image
+import sqlite3
+
+left1_column, right2_column = st.columns([1, 4])
+inside_left, inside_right = right2_column.columns([4, 1])
+query = inside_left.text_input('', label_visibility='collapsed')
+# inside_right.markdown("<style>div.stButton > button:first-child { margin-top: 100px; }</style>", unsafe_allow_html=True)
+st.markdown(
+    """
+    <style>
+    #my-button {
+        margin-bottom: 17px;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 # Добавление вкладок
-tabs = ["Главная", "Краткое описание", "Доп. Информация"]
-selected_tab = st.sidebar.radio("Выберите вкладку", tabs)
-
-# Заголовок приложения
-st.title('Умный ассистент')
-
-# Поле для ввода запроса
-query = st.text_input('Введите ваш запрос:')
+# tabs = ["Главная", "Краткое описание", "Доп. Информация"]
+# selected_tab = st.sidebar.radio("Выберите вкладку", tabs)
 
 
 # Функция для обработки запроса и вывода данных
@@ -18,40 +27,26 @@ def process_query(query):
     # Например, можно использовать pandas для работы с данными
 
     # Пример вывода данных
-    st.write(f'Вы ввели запрос: {query}')
+    right2_column.write(f'Вы ввели запрос: {query}')
     st.write('Здесь могут быть данные, соответствующие вашему запросу')
 
 
 # Обработка запроса при нажатии кнопки
-if st.button('Отправить запрос'):
+if inside_right.button('🔍', key="my-button"):
     process_query(query)
 
-# Отображение информации в зависимости от выбранной вкладки
-if query == "":
-    if selected_tab == "Главная":
-        subtabs = ["1.1", "1.2", "1.3"]
-        selected_subtab = st.sidebar.radio("Подвкладка", subtabs)
-        if selected_subtab == "1.1":
-            st.write("Содержимое подвкладки 1.1")
-        elif selected_subtab == "1.2":
-            st.write("Содержимое подвкладки 1.2")
-        elif selected_subtab == "1.3":
-            st.write("Содержимое подвкладки 1.3")
-    elif selected_tab == "Краткое описание":
-        subtabs = ["2.1", "2.2", "2.3"]
-        selected_subtab = st.sidebar.radio("Подвкладка", subtabs)
-        if selected_subtab == "2.1":
-            st.write("Содержимое подвкладки 2.1")
-        elif selected_subtab == "2.2":
-            st.write("Содержимое подвкладки 2.2")
-        elif selected_subtab == "2.3":
-            st.write("Содержимое подвкладки 2.3")
-    elif selected_tab == "Доп. Информация":
-        subtabs = ["3.1", "3.2", "3.3"]
-        selected_subtab = st.sidebar.radio("Подвкладка", subtabs)
-        if selected_subtab == "3.1":
-            st.write("Содержимое подвкладки 3.1")
-        elif selected_subtab == "3.2":
-            st.write("Содержимое подвкладки 3.2")
-        elif selected_subtab == "3.3":
-            st.write("Содержимое подвкладки 3.3")
+# Определение структуры иерархии страниц и категорий
+pages = {
+    "Категория 1": ["Страница 1", "Страница 2"],
+    "Категория 2": ["Страница 3", "Страница 4", "Страница 5"],
+    "Категория 3": ["Страница 6"]
+}
+
+# Отображение названий страниц в боковой панели
+for category, subpages in pages.items():
+    st.sidebar.subheader(category)
+    for subpage in subpages:
+        if st.sidebar.button(subpage):
+            st.write(f"Отображается страница: {subpage}")
+# путь к базе
+# database_path = "C:\\Users\\gaevf\\PycharmProjects\\ProjectStreamlit\\wikipedia_articles.db"
