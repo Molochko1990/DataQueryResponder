@@ -38,7 +38,6 @@ def create_database():
     CREATE TABLE IF NOT EXISTS articles (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         subsubcategory_id INTEGER NOT NULL,
-        title TEXT NOT NULL,
         content TEXT NOT NULL,
         FOREIGN KEY (subsubcategory_id) REFERENCES subsubcategories(id)
     );
@@ -47,5 +46,5 @@ def create_database():
     conn.commit()
     conn.close()
 
-if __name__ == '__main__':
-    create_database()
+
+create_database()
