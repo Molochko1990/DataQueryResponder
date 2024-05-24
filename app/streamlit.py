@@ -1,10 +1,5 @@
-from ..search import semantic_search as ss
-
-
-
-input()
-
-import streamlit as st
+from search import semantic_search as ss
+from app import streamlit as st
 
 st.title('Умный ассистент')
 query = st.text_input('Введите ваш запрос:')
