@@ -43,13 +43,11 @@ def base():
             components[test] = st.expander(test)
 
             for subcategory in categories.values():
-                print('xyuuuuuuuuuuuu', subcategory)
                 for title in list(subcategory.keys()):
                     components[test].title(title)
                     components[test].write(subcategory[title])
                 print(components.keys())
 
-    # print('aboba', str(list(theme.values())[:]))
     # results += str(list(theme.values())[:])
 
 
