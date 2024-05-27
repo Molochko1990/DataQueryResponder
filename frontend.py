@@ -1,19 +1,9 @@
 import streamlit as st
 import sqlite3
 from database import semantic_search as ss
-#
-#
-#
-#conn = sqlite3.connect('database/knowledge_base.db')
-#
-#cursorart = conn.cursor()
-#
-#cursorart.execute("SELECT * FROM articles")
-#
-#rows = cursorart.fetchall()
-#
-#files = {}
-#
+
+# Для оформления
+
 left1_column, right2_column = st.columns([1, 4])
 inside_left, inside_right = right2_column.columns([4, 1])
 st.markdown(
@@ -27,9 +17,11 @@ st.markdown(
     unsafe_allow_html=True
 )
 results = ''
-
 ResultsList = []
 ResultsListSub = []
+
+
+# обработка пользовательского запроса
 def process_query(query):
     global results
     right2_column.write(f'Вы ввели запрос: {query}')
@@ -38,37 +30,7 @@ def process_query(query):
         ResultsList.append(result['articles'])
         ResultsListSub.append([result['subcategory'], result['subsubcategory']])
 
-#История компании
-
-#Расскажи историю компании
-
-#main_page = st.container()
-
-
-
-
-
-#def create_list(data, level=0):
-#    global results
-#    for key, value in data.items():
-#        with st.sidebar:
-#            if isinstance(value, dict):
-#                if st.checkbox('➖' * level + str(key)):
-#                    create_list(value, level + 1)
-#            else:
-#                if st.checkbox('➖' * level + str(key)):
-#                    with main_page:
-#                        results = value
-
-
-
-
-
-
-# путь к базе
-# database_path = "C:\\Users\\gaevf\\PycharmProjects\\ProjectStreamlit\\wikipedia_articles.db"
-
-# Функция для сохранения состояния сессии
+# сохранение состояния сессии
 def save_session_state(selected_category, selected_subcategory, selected_content):
     session_state = {
         'selected_category': selected_category,
@@ -77,7 +39,7 @@ def save_session_state(selected_category, selected_subcategory, selected_content
     }
     return session_state
 
-# Функция для восстановления состояния сессии
+# восстановление состояния сессии
 def restore_session_state():
     session_state = st.session_state.get('session_state', None)
     if session_state:
@@ -85,7 +47,7 @@ def restore_session_state():
     else:
         return None, None, None
 
-# Функция для чтения базы данных
+# чтение базы данных
 def read_database():
     conn = sqlite3.connect('database/knowledge_base.db')
     cursor = conn.cursor()
