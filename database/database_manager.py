@@ -2,7 +2,7 @@ import sqlite3
 
 
 class DBManager:
-    def __init__(self, sqlite_db_path='../database/knowledge_base.db'):
+    def __init__(self, sqlite_db_path='database/knowledge_base.db'):
         self.sqlite_db_path = sqlite_db_path
         self.sqlite_conn = sqlite3.connect(self.sqlite_db_path)
         self.cursor = self.sqlite_conn.cursor()

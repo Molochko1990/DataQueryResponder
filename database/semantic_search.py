@@ -1,5 +1,5 @@
 from elasticsearch import Elasticsearch, helpers
-from pythonProject.DataQueryResponder.database import database_manager
+from database import database_manager
 
 
 es_host = 'localhost'
@@ -69,14 +69,18 @@ db_manager.close_connection()
 def search_articles(query, index_name):
     search_query = {
         "query": {
-            "match": {
-                "articles": query
+            "multi_match": {
+                "query": query,
+                "fields": ["articles", "subsubcategory", "subcategory", "category"]
             }
         }
     }
 
     response = es.search(index=index_name, body=search_query)
     return response
+
+
+
 
 
 def process_search_results(response):
@@ -97,15 +101,15 @@ def process_search_results(response):
 
     return results
 
+#query = "технологий"
 
-query = "технологий"
-response = search_articles(query, index_name)
-print(response)
-results = process_search_results(response)
+def elastic_output(query):
+    response = search_articles(query, index_name)
+    results = process_search_results(response)
+    return results
 
-for result in results:
-    print(f"Article: {result['articles']}")
-    print(f"Subsubcategory: {result['subsubcategory']}")
-    print(f"Subcategory: {result['subcategory']}")
-    print(f"Category: {result['category']}")
-    print("-" * 40)
+
+
+print(elastic_output("Расскажи про историю компании"))
+
+

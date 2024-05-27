@@ -3,8 +3,7 @@ from app import streamlit as st
 
 print(ss.SemanticSearch("Мечниковы"))"""
 
-
-from search import semantic_search as ss
+from database import semantic_search as ss
 import streamlit as st
 
 st.title('Умный ассистент')
