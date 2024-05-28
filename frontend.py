@@ -20,6 +20,9 @@ results = ''
 ResultsList = []
 ResultsListSub = []
 
+st.sidebar.image("logo.png")
+
+
 
 # обработка пользовательского запроса
 def process_query(query):
@@ -115,3 +118,4 @@ if selected_subcategory:
 # Сохранение состояния сессии
 session_state = save_session_state(selected_category, selected_subcategory, selected_content)
 st.session_state['session_state'] = session_state
+
