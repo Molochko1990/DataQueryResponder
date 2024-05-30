@@ -21,6 +21,9 @@ if not es.indices.exists(index=index_name):
                     }
                 },
                 "filter": {
+                    "lowercase": {
+                        "type": "lowercase"
+                    },
                     "russian_stop": {
                         "type": "stop",
                         "stopwords": "_russian_"
@@ -28,6 +31,10 @@ if not es.indices.exists(index=index_name):
                     "russian_stemmer": {
                         "type": "stemmer",
                         "language": "russian"
+                    },
+                    "synonym_filter": {
+                        "type": "synonym",
+                        "synonyms": []
                     }
                 }
             }
@@ -37,6 +44,18 @@ if not es.indices.exists(index=index_name):
                 "articles": {
                     "type": "text",
                     "analyzer": "russian_analyzer"
+                },
+                "subsubcategory": {
+                    "type": "text",
+                    "analyzer": "russian_analyzer"
+                },
+                "subcategory": {
+                    "type": "text",
+                    "analyzer": "russian_analyzer"
+                },
+                "category": {
+                    "type": "text",
+                    "analyzer": "russian_analyzer"
                 }
             }
         }
@@ -44,8 +63,9 @@ if not es.indices.exists(index=index_name):
 
 
 def create_actions(rows, index_name):
-    actions = [
-        {
+    actions = []
+    for row in rows:
+        actions.append({
             "_index": index_name,
             "_id": row[0],
             "_source": {
@@ -54,9 +74,7 @@ def create_actions(rows, index_name):
                 "subcategory": row[3],
                 "category": row[4]
             }
-        }
-        for row in rows
-    ]
+        })
     return actions
 
 
@@ -66,11 +84,13 @@ for rows in db_manager.fetch_data():
 
 db_manager.close_connection()
 
+
 def search_articles(query, index_name):
     search_query = {
         "query": {
-            "match": {
-                "articles": query
+            "multi_match": {
+                "query": query,
+                "fields": ["articles", "subsubcategory", "subcategory", "category"]
             }
         }
     }
@@ -98,7 +118,7 @@ def process_search_results(response):
     return results
 
 
-query = "технологий"
+query = "управление проектами"
 response = search_articles(query, index_name)
 print(response)
 results = process_search_results(response)
