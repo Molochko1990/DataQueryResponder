@@ -1,5 +1,5 @@
 from elasticsearch import Elasticsearch, helpers
-from database import database_manager
+from pythonProject.DataQueryResponder.database import database_manager
 
 
 es_host = 'localhost'
@@ -21,6 +21,9 @@ if not es.indices.exists(index=index_name):
                     }
                 },
                 "filter": {
+                    "lowercase": {
+                        "type": "lowercase"
+                    },
                     "russian_stop": {
                         "type": "stop",
                         "stopwords": "_russian_"
@@ -28,6 +31,10 @@ if not es.indices.exists(index=index_name):
                     "russian_stemmer": {
                         "type": "stemmer",
                         "language": "russian"
+                    },
+                    "synonym_filter": {
+                        "type": "synonym",
+                        "synonyms": []
                     }
                 }
             }
@@ -37,6 +44,18 @@ if not es.indices.exists(index=index_name):
                 "articles": {
                     "type": "text",
                     "analyzer": "russian_analyzer"
+                },
+                "subsubcategory": {
+                    "type": "text",
+                    "analyzer": "russian_analyzer"
+                },
+                "subcategory": {
+                    "type": "text",
+                    "analyzer": "russian_analyzer"
+                },
+                "category": {
+                    "type": "text",
+                    "analyzer": "russian_analyzer"
                 }
             }
         }
@@ -44,8 +63,9 @@ if not es.indices.exists(index=index_name):
 
 
 def create_actions(rows, index_name):
-    actions = [
-        {
+    actions = []
+    for row in rows:
+        actions.append({
             "_index": index_name,
             "_id": row[0],
             "_source": {
@@ -54,9 +74,7 @@ def create_actions(rows, index_name):
                 "subcategory": row[3],
                 "category": row[4]
             }
-        }
-        for row in rows
-    ]
+        })
     return actions
 
 
@@ -65,6 +83,7 @@ for rows in db_manager.fetch_data():
     helpers.bulk(es, actions)
 
 db_manager.close_connection()
+
 
 def search_articles(query, index_name):
     search_query = {
@@ -78,9 +97,6 @@ def search_articles(query, index_name):
 
     response = es.search(index=index_name, body=search_query)
     return response
-
-
-
 
 
 def process_search_results(response):
@@ -101,15 +117,15 @@ def process_search_results(response):
 
     return results
 
-#query = "технологий"
 
-def elastic_output(query):
-    response = search_articles(query, index_name)
-    results = process_search_results(response)
-    return results
+query = "управление проектами"
+response = search_articles(query, index_name)
+print(response)
+results = process_search_results(response)
 
-
-
-print(elastic_output("Расскажи про историю компании"))
-
-
+for result in results:
+    print(f"Article: {result['articles']}")
+    print(f"Subsubcategory: {result['subsubcategory']}")
+    print(f"Subcategory: {result['subcategory']}")
+    print(f"Category: {result['category']}")
+    print("-" * 40)

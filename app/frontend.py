@@ -52,7 +52,7 @@ def restore_session_state():
 
 # чтение базы данных
 def read_database():
-    conn = sqlite3.connect('database/knowledge_base.db')
+    conn = sqlite3.connect('../database/knowledge_base.db')
     cursor = conn.cursor()
 
     cursor.execute("SELECT categories.name, subcategories.name, subsubcategories.name, articles.content "
