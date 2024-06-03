@@ -1,6 +1,6 @@
 import streamlit as st
 import sqlite3
-from database import semantic_search as ss
+from ..semantic_search import semantic_search as ss
 
 # Для оформления
 
