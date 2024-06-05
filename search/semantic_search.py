@@ -126,7 +126,6 @@ def elastic_output(query):
 
 # query = "управление проектами"
 # response = search_articles(query, index_name)
-# print(response)
 # results = process_search_results(response)
 #
 # for result in results:

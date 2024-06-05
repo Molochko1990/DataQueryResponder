@@ -94,30 +94,35 @@ selected_category, selected_subcategory, selected_content = restore_session_stat
 # Чтение базы данных
 hierarchy = read_database()
 
-st.sidebar.title('Категории')
+st.sidebar.title('Быстрый поиск')
 
 query = st.sidebar.text_input('', label_visibility='collapsed')
 if st.sidebar.button('🔍', key="my-button"):
     process_query(query)
     st.write("------------------")
-    try:
-        st.write(f'Краткий ответ: {gpt.fetch_gpt_response(query, ResultsList[0]+ResultsList[1]+ResultsList[2])}')
-    except:
-        st.write('Краткий ответ: ', gpt.fetch_gpt_response(query, ResultsList[0]))
+    if ResultsList[0] != "Нет результатов":
+        try:
+            st.write(f'Краткий ответ: {gpt.fetch_gpt_response(query, ResultsList[0]+ResultsList[1]+ResultsList[2])}')
+        except:
+            st.write('Краткий ответ: ', gpt.fetch_gpt_response(query, ResultsList[0]))
+        st.write("------------------")
+        st.write('Найденная информация: ', )
 
-    st.write("------------------")
-    st.write('Найденная информация: ', )
+        for i in range(len(ResultsList)):
+               expName = ResultsListSub[i][0] + ' - ' + ResultsListSub[i][1]
+               currentEsp = st.expander(expName, expanded=True)
+               with currentEsp:
+                   st.write(ResultsList[i])
+    else:
+        st.write("Ничего не найдено!")
 
-for i in range(len(ResultsList)):
-       expName = ResultsListSub[i][0] + ' - ' + ResultsListSub[i][1]
-       currentEsp = st.expander(expName, expanded=True)
-       with currentEsp:
-           st.write(ResultsList[i])
 st.write("------------------")
 st.write('Информация из выбранных категорий: ', )
 
 
+
 # Выбор категории
+st.sidebar.title('Ручной поиск по категориям')
 selected_category = st.sidebar.selectbox('Выберите категорию', list(hierarchy.keys()), index=list(hierarchy.keys()).index(selected_category) if selected_category else 0)
 
 if selected_category in hierarchy and hierarchy[selected_category]:
