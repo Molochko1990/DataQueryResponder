@@ -1,6 +1,6 @@
 import streamlit as st
 import sqlite3
-from ..semantic_search import semantic_search as ss
+from search import semantic_search as ss
 
 # Для оформления
 
@@ -20,7 +20,7 @@ results = ''
 ResultsList = []
 ResultsListSub = []
 
-st.sidebar.image("logo.png")
+st.sidebar.image("assets/logo.png")
 
 
 
@@ -52,7 +52,7 @@ def restore_session_state():
 
 # чтение базы данных
 def read_database():
-    conn = sqlite3.connect('../database/knowledge_base.db')
+    conn = sqlite3.connect('database/knowledge_base.db')
     cursor = conn.cursor()
 
     cursor.execute("SELECT categories.name, subcategories.name, subsubcategories.name, articles.content "
