@@ -1,6 +1,7 @@
 import streamlit as st
 import sqlite3
 from search import semantic_search as ss
+from chatgpt import gpt_manager as gpt
 
 # Для оформления
 
@@ -29,9 +30,15 @@ def process_query(query):
     global results
     right2_column.write(f'Вы ввели запрос: {query}')
     nglobal_results = ss.elastic_output(query)
-    for result in nglobal_results:
-        ResultsList.append(result['articles'])
-        ResultsListSub.append([result['subcategory'], result['subsubcategory']])
+    if type(nglobal_results) != str:
+        for result in nglobal_results:
+            ResultsList.append(result['articles'])
+            ResultsListSub.append([result['subcategory'], result['subsubcategory']])
+    else:
+        ResultsList.append('Нет результатов')
+        ResultsListSub.append(['subcategory', 'subsubcategory'])
+
+
 
 # сохранение состояния сессии
 def save_session_state(selected_category, selected_subcategory, selected_content):
@@ -92,13 +99,22 @@ st.sidebar.title('Категории')
 query = st.sidebar.text_input('', label_visibility='collapsed')
 if st.sidebar.button('🔍', key="my-button"):
     process_query(query)
-    for i in range(len(ResultsList)):
+    st.write("------------------")
+    try:
+        st.write(f'Краткий ответ: {gpt.fetch_gpt_response(query, ResultsList[0]+ResultsList[1]+ResultsList[2])}')
+    except:
+        st.write('Краткий ответ: ', gpt.fetch_gpt_response(query, ResultsList[0]))
+
+    st.write("------------------")
+    st.write('Найденная информация: ', )
+
+for i in range(len(ResultsList)):
        expName = ResultsListSub[i][0] + ' - ' + ResultsListSub[i][1]
        currentEsp = st.expander(expName, expanded=True)
        with currentEsp:
            st.write(ResultsList[i])
-    st.write("------------------")
-    st.write('Информация из выбранных категорий: ', )
+st.write("------------------")
+st.write('Информация из выбранных категорий: ', )
 
 
 # Выбор категории

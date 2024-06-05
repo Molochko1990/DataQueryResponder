@@ -14,5 +14,5 @@ def fetch_gpt_response(question, answer):
         model="gpt-3.5-turbo",  # gpt-4-turbo-preview
         messages=messages
     )
-
+    print(gpt_response.choices[0].message.content)
     return gpt_response.choices[0].message.content
