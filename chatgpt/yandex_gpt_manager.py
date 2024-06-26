@@ -2,11 +2,11 @@ import requests
 url = "https://llm.api.cloud.yandex.net/foundationModels/v1/completion"
 headers = {
     "Content-Type": "application/json",
-    "Authorization": "Api-Key AQVN2pHf4BRLAXpXFz9Saapxdm1cjanw-8iZK6-s" # Этот api  убрать
+    "Authorization": "Api-Key #your api"
 }
 def fetch_yandex_gpt_response(question = None, answer = None):
     prompt = {
-        "modelUri": "gpt://b1gks3qh14qma0kud95t/yandexgpt/latest",  # b1gks3qh14qma0kud95t Этот тоже убрать надо
+        "modelUri": "gpt://b1gks3qh14qma0kud95t/yandexgpt/latest",
         "completionOptions": {
             "stream": False,
             "temperature": 0.6,
