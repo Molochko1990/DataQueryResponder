@@ -102,9 +102,11 @@ if st.sidebar.button('🔍', key="my-button"):
     st.write("------------------")
     if ResultsList[0] != "Нет результатов":
         try:
-            st.write(f'Краткий ответ: {gpt.fetch_gpt_response(query, ResultsList[0]+ResultsList[1]+ResultsList[2])}')
+           # st.write(f'Краткий ответ: {gpt.fetch_gpt_response(query, ResultsList[0]+ResultsList[1]+ResultsList[2])}') #OpenAI
+            st.write(f'Краткий ответ: {yandex_gpt.fetch_yandex_gpt_response(query, ResultsList[0] + ResultsList[1] + ResultsList[2])}') #Yandex GPT
         except:
-            st.write('Краткий ответ: ', gpt.fetch_gpt_response(query, ResultsList[0]))
+           # st.write('Краткий ответ: ', gpt.fetch_gpt_response(query, ResultsList[0])) #OpenAI
+            st.write('Краткий ответ: ', yandex_gpt.fetch_yandex_gpt_response(query, ResultsList[0])) #Yandex GPT
         st.write("------------------")
         st.write('Найденная информация: ', )
 
